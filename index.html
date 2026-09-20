@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-<title>AJDA — 360° Virtual Tour</title>
+<title>AJDA — 360° Virtual Experience</title>
 
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.css"
-/>
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.css">
 
-<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.js"></script>
+<script
+src="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.js">
+</script>
 
 <style>
 
@@ -19,14 +19,13 @@
   box-sizing:border-box;
 }
 
-html,
-body{
+html,body{
   margin:0;
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#080808;
-  font-family:Arial,Helvetica,sans-serif;
+  background:#050505;
+  font-family:Inter,Arial,sans-serif;
 }
 
 #tour{
@@ -34,22 +33,22 @@ body{
   inset:0;
 }
 
-/* =========================
+/* =================================
    INTRO
-========================= */
+================================= */
 
 #intro{
   position:fixed;
   inset:0;
   z-index:100;
-  background:#080808;
   display:flex;
   align-items:center;
   justify-content:center;
-  transition:opacity .8s ease, visibility .8s ease;
+  background:#070707;
+  transition:opacity .9s ease,visibility .9s;
 }
 
-#intro.hidden{
+#intro.hide{
   opacity:0;
   visibility:hidden;
   pointer-events:none;
@@ -68,40 +67,48 @@ body{
 .intro-line{
   width:45px;
   height:1px;
-  background:rgba(255,255,255,.55);
   margin:25px auto 18px;
+  background:rgba(255,255,255,.5);
 }
 
-.intro-title{
-  color:rgba(255,255,255,.7);
+.intro-label{
+  color:rgba(255,255,255,.68);
   font-size:10px;
-  letter-spacing:.3em;
+  letter-spacing:.28em;
   text-transform:uppercase;
 }
 
-.enter-button{
+.enter{
   margin-top:28px;
-  padding:13px 24px;
+  padding:13px 25px;
   border-radius:50px;
-  border:1px solid rgba(255,255,255,.2);
+  border:1px solid rgba(255,255,255,.18);
   background:rgba(255,255,255,.06);
   color:white;
   cursor:pointer;
-  font-size:11px;
-  letter-spacing:.12em;
+  font-size:10px;
+  letter-spacing:.14em;
   text-transform:uppercase;
   transition:.25s;
 }
 
-.enter-button:hover{
-  background:rgba(255,255,255,.15);
+.enter:hover{
+  background:rgba(255,255,255,.14);
   transform:translateY(-2px);
 }
 
+.loading-text{
+  margin-top:18px;
+  color:rgba(255,255,255,.38);
+  font-size:9px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
 
-/* =========================
+
+/* =================================
    TOP BAR
-========================= */
+================================= */
 
 .topbar{
   position:fixed;
@@ -114,7 +121,7 @@ body{
   align-items:center;
   justify-content:space-between;
 
-  transition:opacity .4s;
+  transition:opacity .45s;
 }
 
 .topbar.hidden{
@@ -122,30 +129,28 @@ body{
   pointer-events:none;
 }
 
-.logo-box,
-.scene-box,
-.controls{
-  background:rgba(10,12,14,.55);
-  border:1px solid rgba(255,255,255,.15);
+.glass{
+  background:rgba(10,12,14,.52);
+  border:1px solid rgba(255,255,255,.14);
   backdrop-filter:blur(18px);
   -webkit-backdrop-filter:blur(18px);
 }
 
-.logo-box{
+.logo{
   padding:9px 13px;
   border-radius:12px;
 }
 
-.logo-box img{
+.logo img{
   display:block;
-  height:24px;
+  height:23px;
   width:auto;
 }
 
-.scene-box{
+.scene{
   padding:9px 14px;
-  border-radius:50px;
-  color:white;
+  border-radius:30px;
+  color:rgba(255,255,255,.85);
   font-size:10px;
   letter-spacing:.15em;
   text-transform:uppercase;
@@ -162,68 +167,36 @@ body{
   width:36px;
   height:32px;
   border:0;
+  border-radius:8px;
   background:transparent;
   color:white;
-  border-radius:8px;
   cursor:pointer;
-  font-size:16px;
+  font-size:15px;
 }
 
-.control:hover{
-  background:rgba(255,255,255,.12);
+.control:hover,
+.control.active{
+  background:rgba(255,255,255,.13);
 }
 
 
-/* =========================
-   WAYPOINT
-========================= */
+/* =================================
+   COMPASS
+================================= */
 
-#waypoint{
+#compass{
   position:fixed;
-  z-index:25;
+  z-index:20;
 
-  width:76px;
-  height:76px;
+  left:50%;
+  top:20px;
 
-  transform:translate(-50%,-50%);
+  transform:translateX(-50%);
 
-  display:none;
-
-  cursor:pointer;
-
-  pointer-events:auto;
-
-  transition:
-    left .15s linear,
-    top .15s linear,
-    opacity .3s;
-}
-
-#waypoint.visible{
-  display:block;
-}
-
-.waypoint-ring{
-  position:absolute;
-  inset:5px;
+  width:38px;
+  height:38px;
 
   border-radius:50%;
-
-  background:rgba(15,15,15,.45);
-
-  border:1px solid rgba(255,255,255,.9);
-
-  backdrop-filter:blur(8px);
-
-  box-shadow:
-    0 0 0 0 rgba(255,255,255,.4);
-
-  animation:pulse 2s infinite;
-}
-
-.waypoint-arrow{
-  position:absolute;
-  inset:0;
 
   display:flex;
   align-items:center;
@@ -231,68 +204,119 @@ body{
 
   color:white;
 
-  font-size:26px;
+  font-size:10px;
 
-  text-shadow:
-    0 2px 8px rgba(0,0,0,.8);
+  background:rgba(10,12,14,.42);
+
+  border:1px solid rgba(255,255,255,.15);
+
+  backdrop-filter:blur(15px);
+
+  transition:opacity .4s;
 }
 
-.waypoint-label{
+#compass.hidden{
+  opacity:0;
+}
+
+
+/* =================================
+   GROUND WAYPOINT
+================================= */
+
+#waypoint{
+
+  position:fixed;
+
+  z-index:25;
+
+  width:54px;
+  height:34px;
+
+  display:none;
+
+  transform:
+    translate(-50%,-50%)
+    rotateX(58deg)
+    rotateZ(-45deg);
+
+  cursor:pointer;
+
+  filter:
+    drop-shadow(0 4px 5px rgba(0,0,0,.45));
+
+  transition:
+    left .12s linear,
+    top .12s linear,
+    opacity .25s;
+
+}
+
+#waypoint.visible{
+  display:block;
+}
+
+.arrow-shape{
+
+  width:38px;
+  height:38px;
+
   position:absolute;
 
-  top:82px;
-  left:50%;
+  left:8px;
+  top:-2px;
 
-  transform:translateX(-50%);
+  border-top:3px solid rgba(255,255,255,.95);
+  border-right:3px solid rgba(255,255,255,.95);
 
-  white-space:nowrap;
-
-  padding:8px 13px;
-
-  border-radius:30px;
-
-  color:white;
-
-  background:rgba(10,12,14,.7);
-
-  border:1px solid rgba(255,255,255,.18);
-
-  backdrop-filter:blur(12px);
-
-  font-size:9px;
-
-  letter-spacing:.14em;
-
-  text-transform:uppercase;
-}
-
-@keyframes pulse{
-
-  0%{
-    box-shadow:
-      0 0 0 0 rgba(255,255,255,.35);
-  }
-
-  70%{
-    box-shadow:
-      0 0 0 16px rgba(255,255,255,0);
-  }
-
-  100%{
-    box-shadow:
-      0 0 0 0 rgba(255,255,255,0);
-  }
+  transform:rotate(-45deg);
 
 }
 
+.arrow-base{
 
-/* =========================
+  position:absolute;
+
+  width:30px;
+  height:5px;
+
+  left:13px;
+  top:17px;
+
+  border-radius:5px;
+
+  background:rgba(255,255,255,.9);
+
+}
+
+.waypoint-shadow{
+
+  position:absolute;
+
+  left:5px;
+  right:5px;
+  bottom:-6px;
+
+  height:5px;
+
+  border-radius:50%;
+
+  background:rgba(0,0,0,.35);
+
+  filter:blur(3px);
+
+}
+
+
+/* =================================
    TRANSITION
-========================= */
+================================= */
 
 #transition{
+
   position:fixed;
-  inset:-10%;
+
+  inset:-8%;
 
   z-index:90;
 
@@ -300,16 +324,20 @@ body{
 
   opacity:0;
 
-  background:rgba(0,0,0,.2);
+  background:rgba(0,0,0,.16);
 
   backdrop-filter:blur(0);
+
   -webkit-backdrop-filter:blur(0);
 
   transform:scale(1);
+
 }
 
-#transition.animate{
-  animation:travel .9s ease-in-out forwards;
+#transition.go{
+
+  animation:travel .9s cubic-bezier(.65,0,.2,1) forwards;
+
 }
 
 @keyframes travel{
@@ -322,14 +350,14 @@ body{
 
   35%{
     opacity:1;
-    backdrop-filter:blur(11px);
-    transform:scale(1.04);
+    backdrop-filter:blur(10px);
+    transform:scale(1.045);
   }
 
   70%{
     opacity:1;
     backdrop-filter:blur(7px);
-    transform:scale(1.02);
+    transform:scale(1.025);
   }
 
   100%{
@@ -341,11 +369,12 @@ body{
 }
 
 
-/* =========================
+/* =================================
    HINT
-========================= */
+================================= */
 
 #hint{
+
   position:fixed;
 
   z-index:20;
@@ -359,13 +388,13 @@ body{
 
   border-radius:30px;
 
-  color:rgba(255,255,255,.7);
+  background:rgba(10,12,14,.48);
 
-  background:rgba(10,12,14,.5);
+  border:1px solid rgba(255,255,255,.14);
 
-  border:1px solid rgba(255,255,255,.15);
+  backdrop-filter:blur(14px);
 
-  backdrop-filter:blur(12px);
+  color:rgba(255,255,255,.65);
 
   font-size:9px;
 
@@ -373,26 +402,61 @@ body{
 
   text-transform:uppercase;
 
-  transition:opacity .4s;
+  transition:opacity .5s;
+
 }
 
-#hint.hidden{
+#hint.hide{
   opacity:0;
 }
 
 
-/* Hide Pannellum default controls */
+/* =================================
+   INITIAL LOADING
+================================= */
+
+#loading{
+
+  position:fixed;
+
+  z-index:80;
+
+  left:50%;
+  bottom:70px;
+
+  transform:translateX(-50%);
+
+  color:rgba(255,255,255,.6);
+
+  font-size:9px;
+
+  letter-spacing:.13em;
+
+  text-transform:uppercase;
+
+  transition:opacity .5s;
+
+}
+
+#loading.hide{
+  opacity:0;
+}
+
+
+/* Hide Pannellum controls */
 
 .pnlm-controls-container{
-  display:none !important;
+  display:none!important;
 }
 
 .pnlm-about-msg{
-  display:none !important;
+  display:none!important;
 }
 
 
-/* MOBILE */
+/* =================================
+   MOBILE
+================================= */
 
 @media(max-width:700px){
 
@@ -402,16 +466,20 @@ body{
     right:10px;
   }
 
-  .scene-box{
+  .scene{
     display:none;
   }
 
-  .logo-box img{
+  .logo img{
     height:21px;
   }
 
+  #compass{
+    top:68px;
+  }
+
   #hint{
-    bottom:17px;
+    bottom:18px;
   }
 
 }
@@ -423,42 +491,35 @@ body{
 <body>
 
 
-<!-- =========================
-     PANORAMA
-========================= -->
-
 <div id="tour"></div>
 
 
-<!-- =========================
-     WAYPOINT
-========================= -->
+<!-- WAYPOINT -->
 
 <div id="waypoint">
 
-  <div class="waypoint-ring"></div>
+  <div class="waypoint-shadow"></div>
 
-  <div class="waypoint-arrow">
-    ➜
-  </div>
+  <div class="arrow-shape"></div>
 
-  <div class="waypoint-label" id="waypointLabel">
-    Enter space
-  </div>
+  <div class="arrow-base"></div>
 
 </div>
 
 
-<!-- =========================
-     TRANSITION
-========================= -->
+<!-- TRANSITION -->
 
 <div id="transition"></div>
 
 
-<!-- =========================
-     INTRO
-========================= -->
+<!-- LOADING -->
+
+<div id="loading">
+  Preparing 360° Experience…
+</div>
+
+
+<!-- INTRO -->
 
 <div id="intro">
 
@@ -472,29 +533,34 @@ body{
 
     <div class="intro-line"></div>
 
-    <div class="intro-title">
+    <div class="intro-label">
       Interactive 360° Experience
     </div>
 
     <button
-      class="enter-button"
-      id="enterButton"
+      class="enter"
+      id="enter"
     >
       Enter Experience
     </button>
+
+    <div class="loading-text">
+      360° environment
+    </div>
 
   </div>
 
 </div>
 
 
-<!-- =========================
-     TOP BAR
-========================= -->
+<!-- TOP BAR -->
 
-<div class="topbar" id="topbar">
+<div
+  class="topbar"
+  id="topbar"
+>
 
-  <div class="logo-box">
+  <div class="logo glass">
 
     <img
       src="Ajda.png"
@@ -505,26 +571,34 @@ body{
 
 
   <div
-    class="scene-box"
-    id="sceneTitle"
+    class="scene glass"
+    id="scene"
   >
     Exterior
   </div>
 
 
-  <div class="controls">
+  <div class="controls glass">
 
     <button
       class="control"
-      id="resetButton"
-      title="Reset view"
+      id="motion"
+      title="Enable motion"
+    >
+      ◉
+    </button>
+
+    <button
+      class="control"
+      id="reset"
+      title="Reset"
     >
       ⌂
     </button>
 
     <button
       class="control"
-      id="fullscreenButton"
+      id="fullscreen"
       title="Fullscreen"
     >
       ⛶
@@ -535,20 +609,26 @@ body{
 </div>
 
 
-<div id="hint">
-  Drag to explore · Click the waypoint to enter
+<!-- COMPASS -->
+
+<div id="compass">
+  N
 </div>
 
+
+<div id="hint">
+  Drag to explore · Tap the arrow to enter
+</div>
 
 
 <script>
 
 
-/* =========================================================
+/* ==============================================
    SCENES
-========================================================= */
+============================================== */
 
-const scenes = {
+const scenes={
 
   exterior:{
 
@@ -569,7 +649,6 @@ const scenes = {
     target:"interior"
 
   },
-
 
   interior:{
 
@@ -594,24 +673,58 @@ const scenes = {
 };
 
 
-/* =========================================================
+/* ==============================================
    STATE
-========================================================= */
+============================================== */
 
-let currentScene="exterior";
+let current="exterior";
 
 let viewer=null;
 
 let travelling=false;
 
+let motionEnabled=false;
 
-/* =========================================================
+
+/* ==============================================
+   PRELOAD BOTH PANORAMAS
+============================================== */
+
+function preloadImages(){
+
+  const images=[
+
+    "out360.png",
+
+    "Ajda360.png",
+
+    "Ajda.png"
+
+  ];
+
+  images.forEach(src=>{
+
+    const img=new Image();
+
+    img.src=src;
+
+  });
+
+}
+
+
+/* Start background loading immediately */
+
+preloadImages();
+
+
+/* ==============================================
    CREATE VIEWER
-========================================================= */
+============================================== */
 
 function createViewer(sceneName){
 
-  const scene=scenes[sceneName];
+  const s=scenes[sceneName];
 
 
   if(viewer){
@@ -622,12 +735,14 @@ function createViewer(sceneName){
 
 
   viewer=pannellum.viewer(
+
     "tour",
+
     {
 
       type:"equirectangular",
 
-      panorama:scene.image,
+      panorama:s.image,
 
       autoLoad:true,
 
@@ -641,185 +756,210 @@ function createViewer(sceneName){
 
       friction:.15,
 
-      hfov:scene.hfov,
+      hfov:s.hfov,
 
       minHfov:50,
 
       maxHfov:120,
 
-      yaw:scene.yaw,
+      yaw:s.yaw,
 
-      pitch:scene.pitch,
+      pitch:s.pitch,
 
       sceneFadeDuration:0
 
     }
+
   );
 
 
   viewer.on(
+
     "load",
-    function(){
+
+    ()=>{
+
+      document
+        .getElementById("loading")
+        .classList
+        .add("hide");
 
       updateWaypoint();
 
+      updateCompass();
+
     }
+
   );
 
 }
 
 
-/* =========================================================
-   POSITION WAYPOINT
-========================================================= */
+/* ==============================================
+   WAYPOINT POSITION
+============================================== */
 
 function updateWaypoint(){
 
-  if(!viewer) return;
+  if(!viewer || travelling)return;
 
 
-  const scene=scenes[currentScene];
+  const s=scenes[current];
 
-  const waypoint=document.getElementById("waypoint");
-
-
-  /*
-    Pannellum gives us the screen position
-    of a panorama coordinate.
-  */
-
-  const position=viewer.mouseEventToCoords({
-
-    clientX:window.innerWidth/2,
-    clientY:window.innerHeight/2
-
-  });
+  const waypoint=
+    document.getElementById("waypoint");
 
 
-  /*
-    Convert the waypoint yaw/pitch
-    to screen coordinates.
-  */
+  const yaw=
+    viewer.getYaw();
 
-  const centerYaw=viewer.getYaw();
+  const pitch=
+    viewer.getPitch();
 
-  const centerPitch=viewer.getPitch();
-
-  const hfov=viewer.getHfov();
+  const hfov=
+    viewer.getHfov();
 
 
-  let yawDifference=
-    scene.waypointYaw-centerYaw;
+  let difference=
+    s.waypointYaw-yaw;
 
 
-  while(yawDifference>180)
-    yawDifference-=360;
+  while(difference>180)
+    difference-=360;
 
-  while(yawDifference<-180)
-    yawDifference+=360;
+  while(difference<-180)
+    difference+=360;
 
 
   /*
-    Horizontal field relationship.
+    Keep waypoint within
+    the front hemisphere.
   */
+
+  const visible=
+    Math.abs(difference)<72;
+
+
+  if(!visible){
+
+    waypoint.classList.remove("visible");
+
+    return;
+
+  }
+
 
   const x=
-    window.innerWidth/2 +
+    window.innerWidth/2+
     (
-      yawDifference / hfov
-    ) *
+      difference/hfov
+    )*
     window.innerWidth;
 
 
-  /*
-    Vertical approximation.
-  */
-
   const verticalFov=
-    hfov *
-    window.innerHeight /
+    hfov*
+    window.innerHeight/
     window.innerWidth;
 
 
   const y=
-    window.innerHeight/2 -
+    window.innerHeight/2-
     (
-      (scene.waypointPitch-centerPitch)
-      /
+      (s.waypointPitch-pitch)/
       verticalFov
-    ) *
+    )*
     window.innerHeight;
 
 
   /*
-    Don't show if the waypoint is
-    behind the camera.
+    Ground adjustment.
   */
 
-  const front=
-    Math.cos(
-      yawDifference*Math.PI/180
-    ) > 0;
+  const groundOffset=
+    Math.min(
+      90,
+      Math.max(
+        0,
+        (y-window.innerHeight/2)*.15
+      )
+    );
 
 
-  if(
-    front &&
-    x>-100 &&
-    x<window.innerWidth+100 &&
-    y>-100 &&
-    y<window.innerHeight+100
-  ){
+  waypoint.style.left=
+    x+"px";
 
-    waypoint.style.left=x+"px";
+  waypoint.style.top=
+    (y+groundOffset)+"px";
 
-    waypoint.style.top=y+"px";
 
-    waypoint.classList.add("visible");
-
-  }else{
-
-    waypoint.classList.remove("visible");
-
-  }
+  waypoint.classList.add("visible");
 
 }
 
 
-/* =========================================================
-   UPDATE WAYPOINT WHILE MOVING
-========================================================= */
+/* ==============================================
+   UPDATE FREQUENTLY
+============================================== */
 
 setInterval(
 
-  function(){
+  ()=>{
 
     if(viewer && !travelling){
 
       updateWaypoint();
 
+      updateCompass();
+
     }
 
   },
 
-  50
+  60
 
 );
 
 
-/* =========================================================
+/* ==============================================
+   COMPASS
+============================================== */
+
+function updateCompass(){
+
+  if(!viewer)return;
+
+  const yaw=viewer.getYaw();
+
+  let direction=
+    Math.round(
+      ((yaw%360)+360)%360
+    );
+
+  const compass=
+    document.getElementById("compass");
+
+  compass.style.transform=
+    `translateX(-50%) rotate(${-direction}deg)`;
+
+}
+
+
+/* ==============================================
    TRAVEL
-========================================================= */
+============================================== */
 
 function travel(){
 
-  if(travelling) return;
+  if(travelling)return;
+
 
   travelling=true;
 
 
-  const scene=scenes[currentScene];
+  const s=scenes[current];
 
-  const target=scene.target;
+  const target=s.target;
 
   const transition=
     document.getElementById("transition");
@@ -837,65 +977,59 @@ function travel(){
 
 
   /*
-    First move camera toward
-    the waypoint.
+    Move toward entrance.
   */
 
   viewer.lookAt(
 
-    scene.waypointPitch,
+    s.waypointPitch,
 
-    scene.waypointYaw,
+    s.waypointYaw,
 
     Math.max(
-      60,
-      scene.hfov-18
+      62,
+      s.hfov-16
     ),
 
-    550
+    500
 
   );
 
 
   setTimeout(
 
-    function(){
+    ()=>{
 
-      transition.classList.remove("animate");
+      transition.classList.remove("go");
 
       void transition.offsetWidth;
 
-      transition.classList.add("animate");
+      transition.classList.add("go");
 
 
       setTimeout(
 
-        function(){
+        ()=>{
 
-          currentScene=target;
+          current=target;
 
-          const next=scenes[target];
+
+          const next=
+            scenes[target];
 
 
           createViewer(target);
 
 
-          document.getElementById(
-            "sceneTitle"
-          ).textContent=next.title;
-
-
-          document.getElementById(
-            "waypointLabel"
-          ).textContent=
-            target==="interior"
-            ? "Enter space"
-            : "Return outside";
+          document
+            .getElementById("scene")
+            .textContent=
+            next.title;
 
 
           setTimeout(
 
-            function(){
+            ()=>{
 
               if(viewer){
 
@@ -920,15 +1054,17 @@ function travel(){
 
               updateWaypoint();
 
+              updateCompass();
+
             },
 
-            700
+            650
 
           );
 
         },
 
-        420
+        360
 
       );
 
@@ -941,9 +1077,9 @@ function travel(){
 }
 
 
-/* =========================================================
+/* ==============================================
    WAYPOINT CLICK
-========================================================= */
+============================================== */
 
 document
   .getElementById("waypoint")
@@ -951,7 +1087,7 @@ document
 
     "click",
 
-    function(e){
+    e=>{
 
       e.stopPropagation();
 
@@ -962,66 +1098,55 @@ document
   );
 
 
-/* =========================================================
+/* ==============================================
    INTRO
-========================================================= */
+============================================== */
 
 document
-  .getElementById("enterButton")
+  .getElementById("enter")
   .addEventListener(
 
     "click",
 
-    function(){
+    ()=>{
 
       document
         .getElementById("intro")
         .classList
-        .add("hidden");
+        .add("hide");
 
 
-      setTimeout(
-
-        function(){
-
-          document
-            .getElementById("hint")
-            .classList
-            .add("hidden");
-
-        },
-
-        3500
-
-      );
+      document
+        .getElementById("hint")
+        .classList
+        .remove("hide");
 
     }
 
   );
 
 
-/* =========================================================
+/* ==============================================
    RESET
-========================================================= */
+============================================== */
 
 document
-  .getElementById("resetButton")
+  .getElementById("reset")
   .addEventListener(
 
     "click",
 
-    function(){
+    ()=>{
 
-      const scene=scenes[currentScene];
-
+      const s=scenes[current];
 
       viewer.lookAt(
 
-        scene.pitch,
+        s.pitch,
 
-        scene.yaw,
+        s.yaw,
 
-        scene.hfov,
+        s.hfov,
 
         800
 
@@ -1032,25 +1157,28 @@ document
   );
 
 
-/* =========================================================
+/* ==============================================
    FULLSCREEN
-========================================================= */
+============================================== */
 
 document
-  .getElementById("fullscreenButton")
+  .getElementById("fullscreen")
   .addEventListener(
 
     "click",
 
-    function(){
+    ()=>{
 
       if(!document.fullscreenElement){
 
-        document.documentElement.requestFullscreen();
+        document
+          .documentElement
+          .requestFullscreen?.();
 
       }else{
 
-        document.exitFullscreen();
+        document
+          .exitFullscreen?.();
 
       }
 
@@ -1059,15 +1187,95 @@ document
   );
 
 
-/* =========================================================
-   UPDATE ON RESIZE
-========================================================= */
+/* ==============================================
+   GYROSCOPE
+============================================== */
+
+async function enableMotion(){
+
+  /*
+    iOS requires permission.
+  */
+
+  if(
+    typeof DeviceOrientationEvent!=="undefined" &&
+    typeof DeviceOrientationEvent.requestPermission==="function"
+  ){
+
+    try{
+
+      const permission=
+        await DeviceOrientationEvent
+        .requestPermission();
+
+      if(permission!=="granted"){
+
+        alert(
+          "Motion access was not allowed."
+        );
+
+        return;
+
+      }
+
+    }catch(error){
+
+      return;
+
+    }
+
+  }
+
+
+  motionEnabled=true;
+
+
+  document
+    .getElementById("motion")
+    .classList
+    .add("active");
+
+
+  /*
+    Pannellum orientation control.
+  */
+
+  if(
+    viewer &&
+    viewer.startOrientationControl
+  ){
+
+    viewer.startOrientationControl();
+
+  }
+
+}
+
+
+/* ==============================================
+   MOTION BUTTON
+============================================== */
+
+document
+  .getElementById("motion")
+  .addEventListener(
+
+    "click",
+
+    enableMotion
+
+  );
+
+
+/* ==============================================
+   RESIZE
+============================================== */
 
 window.addEventListener(
 
   "resize",
 
-  function(){
+  ()=>{
 
     updateWaypoint();
 
@@ -1076,9 +1284,9 @@ window.addEventListener(
 );
 
 
-/* =========================================================
+/* ==============================================
    START
-========================================================= */
+============================================== */
 
 createViewer("exterior");
 

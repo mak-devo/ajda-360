@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AJDA — Virtual Tour</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.css">
+<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.js"></script>
+
+<style>
+:root{
+  --glass:rgba(12,15,18,.58);
+  --line:rgba(255,255,255,.16);
+  --text:#fff;
+  --muted:rgba(255,255,255,.68);
+}
+*{box-sizing:border-box}
+html,body,#tour{
+  width:100%;height:100%;margin:0;overflow:hidden;background:#080909
+}
+body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#fff
+}
+#tour{position:fixed;inset:0}
+
+/* INTRO */
+#intro{
+  position:fixed;inset:0;z-index:50;
+  display:grid;place-items:center;
+  background:#080909;
+  transition:opacity .9s ease,visibility .9s
+}
+#intro.hide{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none
+}
+.intro-inner{
+  text-align:center;
+  transition:transform 1.1s ease
+}
+#intro.hide .intro-inner{transform:translateY(-18px)}
+
+.brand{
+  width:min(300px,58vw);
+  height:auto;
+  max-height:110px;
+  object-fit:contain
+}
+.intro-line{
+  width:44px;height:1px;
+  background:rgba(255,255,255,.55);
+  margin:26px auto 18px
+}
+.intro-label{
+  font-size:10px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:var(--muted)
+}
+.enter{
+  margin-top:28px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  border-radius:999px;
+  padding:12px 22px;
+  cursor:pointer;
+  backdrop-filter:blur(16px);
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  transition:.25s
+}
+.enter:hover{
+  background:rgba(255,255,255,.13);
+  transform:translateY(-1px)
+}
+.loader{
+  width:90px;height:1px;
+  background:rgba(255,255,255,.15);
+  margin:24px auto 0;
+  overflow:hidden
+}
+.loader i{
+  display:block;
+  height:100%;
+  width:35%;
+  background:#fff;
+  animation:load 1.3s infinite ease-in-out
+}
+@keyframes load{
+  0%{transform:translateX(-120%)}
+  100%{transform:translateX(380%)}
+}
+
+/* TOP BAR */
+.topbar{
+  position:fixed;
+  z-index:20;
+  top:18px;
+  left:18px;
+  right:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  pointer-events:none;
+  transition:opacity .45s
+}
+.topbar.hidden{opacity:0}
+
+.logo-wrap,.scene-pill,.controls{
+  pointer-events:auto;
+  background:var(--glass);
+  border:1px solid var(--line);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:0 12px 40px rgba(0,0,0,.18)
+}
+.logo-wrap{
+  padding:9px 13px;
+  border-radius:13px;
+  display:flex;
+  align-items:center
+}
+.logo-wrap img{
+  width:auto;
+  height:24px;
+  max-width:130px;
+  object-fit:contain
+}
+.scene-pill{
+  padding:9px 13px;
+  border-radius:999px;
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.85)
+}
+.controls{
+  border-radius:13px;
+  padding:5px;
+  display:flex;
+  gap:4px
+}
+.ctrl{
+  width:36px;
+  height:32px;
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  color:#fff;
+  cursor:pointer;
+  font-size:15px;
+  transition:.2s
+}
+.ctrl:hover{background:rgba(255,255,255,.12)}
+.ctrl.active{background:rgba(255,255,255,.14)}
+
+/* WAYPOINT */
+.hotspot{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  position:relative;
+  transform:translate(-50%,-50%);
+  cursor:pointer
+}
+.hotspot .ring{
+  position:absolute;
+  inset:5px;
+  border:1px solid rgba(255,255,255,.85);
+  border-radius:50%;
+  animation:pulse 2.2s infinite;
+  background:rgba(10,12,14,.28);
+  backdrop-filter:blur(7px)
+}
+.hotspot .arrow{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  font-size:22px;
+  color:#fff;
+  text-shadow:0 2px 8px #000
+}
+.hotspot .label{
+  position:absolute;
+  top:76px;
+  left:50%;
+  transform:translateX(-50%);
+  white-space:nowrap;
+  padding:7px 11px;
+  border-radius:999px;
+  background:rgba(10,12,14,.66);
+  border:1px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(12px);
+  font-size:10px;
+  letter-spacing:.13em;
+  text-transform:uppercase
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.25)}
+  50%{box-shadow:0 0 0 13px rgba(255,255,255,0)}
+}
+
+/* TRANSITION */
+#transition{
+  position:fixed;
+  inset:-8%;
+  z-index:40;
+  pointer-events:none;
+  opacity:0;
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(0);
+  -webkit-backdrop-filter:blur(0);
+  transform:scale(1)
+}
+#transition.go{
+  animation:travel .95s cubic-bezier(.65,0,.2,1) forwards
+}
+@keyframes travel{
+  0%{
+    opacity:0;
+    backdrop-filter:blur(0);
+    transform:scale(1)
+  }
+  35%{
+    opacity:1;
+    backdrop-filter:blur(10px);
+    transform:scale(1.035)
+  }
+  70%{
+    opacity:1;
+    backdrop-filter:blur(7px);
+    transform:scale(1.02)
+  }
+  100%{
+    opacity:0;
+    backdrop-filter:blur(0);
+    transform:scale(1)
+  }
+}
+
+#hint{
+  position:fixed;
+  z-index:19;
+  left:50%;
+  bottom:28px;
+  transform:translateX(-50%);
+  padding:9px 14px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:rgba(10,12,14,.45);
+  backdrop-filter:blur(14px);
+  color:var(--muted);
+  font-size:10px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  transition:opacity .5s
+}
+#hint.hide{opacity:0}
+
+/* PANNELLUM */
+.pnlm-container{background:#080909!important}
+.pnlm-controls-container{display:none!important}
+.pnlm-about-msg{display:none!important}
+.pnlm-hotspot-base{z-index:8!important}
+
+@media(max-width:700px){
+  .topbar{
+    top:10px;
+    left:10px;
+    right:10px
+  }
+  .scene-pill{display:none}
+  .logo-wrap img{height:21px}
+  #hint{
+    bottom:18px;
+    font-size:9px
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="tour"></div>
+<div id="transition"></div>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="intro-inner">
+
+    <img class="brand" src="Ajda.png" alt="AJDA">
+
+    <div class="intro-line"></div>
+
+    <div class="intro-label">
+      Interactive 360° Experience
+    </div>
+
+    <button class="enter" id="enterBtn">
+      Enter Experience
+    </button>
+
+    <div class="loader">
+      <i></i>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar" id="topbar">
+
+  <div class="logo-wrap">
+    <img src="Ajda.png" alt="AJDA">
+  </div>
+
+  <div class="scene-pill" id="sceneName">
+    Exterior
+  </div>
+
+  <div class="controls">
+
+    <button class="ctrl" id="gyro" title="Gyroscope">
+      ⌁
+    </button>
+
+    <button class="ctrl" id="home" title="Reset view">
+      ⌂
+    </button>
+
+    <button class="ctrl" id="fs" title="Fullscreen">
+      ⛶
+    </button>
+
+  </div>
+
+</div>
+
+<div id="hint">
+  Drag to explore · click the marker to enter
+</div>
+
+<script>
+
+const scenes = {
+
+  exterior:{
+    title:"Exterior",
+    image:"out360.png",
+
+    hfov:95,
+
+    yaw:-9.14,
+    pitch:-9.07,
+
+    hotspotYaw:-9.14,
+    hotspotPitch:-9.07,
+
+    target:"interior"
+  },
+
+  interior:{
+    title:"Interior",
+    image:"Ajda360.png",
+
+    hfov:92,
+
+    yaw:171.04,
+    pitch:-18.68,
+
+    hotspotYaw:171.04,
+    hotspotPitch:-18.68,
+
+    target:"exterior"
+  }
+
+};
+
+let current="exterior";
+let moving=false;
+let viewer;
+
+
+/* HOTSPOT */
+
+function hotspotDiv(target){
+
+  const el=document.createElement("div");
+
+  el.className="hotspot";
+
+  el.innerHTML=`
+    <div class="ring"></div>
+    <div class="arrow">➜</div>
+    <div class="label">
+      ${target==="interior" ? "Enter space" : "Return outside"}
+    </div>
+  `;
+
+  el.addEventListener("click",e=>{
+
+    e.stopPropagation();
+
+    travel(target);
+
+  });
+
+  return el;
+}
+
+
+/* VIEWER CONFIG */
+
+function configFor(name){
+
+  const s=scenes[name];
+
+  return{
+
+    type:"equirectangular",
+
+    panorama:s.image,
+
+    autoLoad:true,
+
+    showControls:false,
+
+    mouseZoom:true,
+
+    keyboardZoom:true,
+
+    draggable:true,
+
+    friction:.12,
+
+    hfov:s.hfov,
+
+    minHfov:55,
+
+    maxHfov:120,
+
+    yaw:s.yaw,
+
+    pitch:s.pitch,
+
+    sceneFadeDuration:0,
+
+    hotSpots:[{
+
+      pitch:s.hotspotPitch,
+
+      yaw:s.hotspotYaw,
+
+      cssClass:"custom-hotspot",
+
+      createTooltipFunc:hotspotDiv,
+
+      createTooltipArgs:s.target
+
+    }]
+
+  };
+
+}
+
+
+/* INITIAL VIEWER */
+
+viewer=pannellum.viewer(
+  "tour",
+  configFor("exterior")
+);
+
+
+/* UI */
+
+function setChrome(name){
+
+  document.getElementById("sceneName").textContent=
+    scenes[name].title;
+
+}
+
+
+/* TRAVEL */
+
+function travel(target){
+
+  if(moving || target===current)return;
+
+  moving=true;
+
+  const s=scenes[current];
+
+  const overlay=document.getElementById("transition");
+
+  const top=document.getElementById("topbar");
+
+  const hint=document.getElementById("hint");
+
+  hint.classList.add("hide");
+
+  top.classList.add("hidden");
+
+
+  /* Move toward waypoint */
+
+  viewer.lookAt(
+    s.hotspotPitch,
+    s.hotspotYaw,
+    Math.max(65,s.hfov-14),
+    520
+  );
+
+
+  setTimeout(()=>{
+
+    overlay.classList.remove("go");
+
+    void overlay.offsetWidth;
+
+    overlay.classList.add("go");
+
+
+    setTimeout(()=>{
+
+      current=target;
+
+      const next=scenes[target];
+
+      viewer.destroy();
+
+      viewer=pannellum.viewer(
+        "tour",
+        configFor(target)
+      );
+
+
+      viewer.on("load",()=>{
+
+        setChrome(target);
+
+        viewer.lookAt(
+          next.pitch,
+          next.yaw,
+          next.hfov,
+          0
+        );
+
+        setTimeout(()=>{
+
+          top.classList.remove("hidden");
+
+          moving=false;
+
+        },240);
+
+      });
+
+    },350);
+
+  },430);
+
+}
+
+
+/* ENTER */
+
+document.getElementById("enterBtn")
+.addEventListener("click",()=>{
+
+  document.getElementById("intro")
+    .classList.add("hide");
+
+  setTimeout(()=>{
+
+    document.getElementById("hint")
+      .classList.add("hide");
+
+  },3200);
+
+});
+
+
+/* RESET VIEW */
+
+document.getElementById("home")
+.addEventListener("click",()=>{
+
+  const s=scenes[current];
+
+  viewer.lookAt(
+    s.pitch,
+    s.yaw,
+    s.hfov,
+    800
+  );
+
+});
+
+
+/* FULLSCREEN */
+
+document.getElementById("fs")
+.addEventListener("click",()=>{
+
+  const el=document.documentElement;
+
+  if(!document.fullscreenElement){
+
+    el.requestFullscreen?.();
+
+  }else{
+
+    document.exitFullscreen?.();
+
+  }
+
+});
+
+
+/* GYROSCOPE */
+
+let gyroOn=false;
+
+document.getElementById("gyro")
+.addEventListener("click",async()=>{
+
+  if(
+    typeof DeviceOrientationEvent!=="undefined" &&
+    typeof DeviceOrientationEvent.requestPermission==="function"
+  ){
+
+    try{
+
+      await DeviceOrientationEvent.requestPermission();
+
+    }catch(e){
+
+      return;
+
+    }
+
+  }
+
+  gyroOn=!gyroOn;
+
+  document
+    .getElementById("gyro")
+    .classList
+    .toggle("active",gyroOn);
+
+  if(viewer.setOrientationControlEnabled){
+
+    viewer.setOrientationControlEnabled(gyroOn);
+
+  }
+
+});
+
+
+/* AUTO HIDE UI */
+
+let idleTimer;
+
+function activity(){
+
+  const bar=document.getElementById("topbar");
+
+  bar.classList.remove("hidden");
+
+  clearTimeout(idleTimer);
+
+  idleTimer=setTimeout(()=>{
+
+    bar.classList.add("hidden");
+
+  },4200);
+
+}
+
+[
+  "pointerdown",
+  "mousemove",
+  "touchstart"
+].forEach(event=>{
+
+  document.addEventListener(
+    event,
+    activity,
+    {passive:true}
+  );
+
+});
+
+
+setChrome(current);
+
+</script>
+
+</body>
+</html>
